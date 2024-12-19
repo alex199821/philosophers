@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/18 10:19:23 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/19 13:44:30 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,56 @@
 //     return (0);
 // }
 
-#define NUM_THREADS 5
+// void mutex_handler(pthread_mutex_t *mutex, t_opcode opcode)
+// {
+// 	if(LOCK == opcode)
+// 		p_thread_mutex_lock(mutex);
+// 	if(UNLOCK == opcode)
+// }
+
+
+
+void	*philosopher_routine(void *arg)
+{
+	t_philos	*philo;
+
+	philo = (t_philos *)arg;
+	printf("Philosopher %d is eating.\n", philo->id);
+	usleep(1000 * 1000);
+	printf("Philosopher %d is sleeping.\n", philo->id);
+	usleep(1000 * 1000);
+	return (NULL);
+}
+
+void	initialize_philos(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->number_of_philos)
+	{
+		data->philos[i].id = i;
+		data->philos[i].amount_of_meals_eaten = 0;
+		i++;
+	}
+	i = 0;
+	while (i < data->number_of_philos)
+	{
+		if (pthread_create(&data->philos[i].philo_thread, NULL,
+				(void *)philosopher_routine, &data->philos[i]) != 0)
+		{
+			perror("Failed to create philosopher thread");
+			exit(1);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < data->number_of_philos)
+	{
+		pthread_join(data->philos[i].philo_thread, NULL);
+		i++;
+	}
+}
 
 t_data	*initialize_data(void)
 {
@@ -95,55 +144,55 @@ t_data	*initialize_data(void)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	data->number_of_philos=8;
-	data->amounto_of_meals=5;
-	data->time_to_die=800;
-	data->time_to_think=200;
-	data->time_to_sleep=200;
-
-
-}
-void	*thread_function(void *arg)
-{
-	int	thread_num;
-
-	thread_num = *((int *)arg);
-	printf("Thread %d is running\n", thread_num);
-	return (NULL);
+	data->number_of_philos = 9;
+	data->amounto_of_meals = 5;
+	data->time_to_die = 800;
+	data->time_to_sleep = 200;
+	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
+	if (!data->philos)
+		return (NULL);
+	initialize_philos(data);
+	return (data);
 }
 
 int	main(void)
 {
-	pthread_t threads[NUM_THREADS];
-	int thread_args[NUM_THREADS];
-	int i = 0;
-
-	// Using a while loop to create threads
-	while (i < NUM_THREADS)
-	{
-		thread_args[i] = i; // Assigning an argument to each thread
-		if (pthread_create(&threads[i], NULL, thread_function,
-				(void *)&thread_args[i]) != 0)
-		{
-			perror("Failed to create thread");
-			return (1);
-		}
-		i++;
-	}
-
-	// Using a while loop to join threads
-	i = 0;
-	while (i < NUM_THREADS)
-	{
-		if (pthread_join(threads[i], NULL) != 0)
-		{
-			perror("Failed to join thread");
-			return (1);
-		}
-		i++;
-	}
-
-	printf("All threads have finished execution.\n");
-
+	initialize_data();
 	return (0);
 }
+
+// int	main(void)
+// {
+// 	pthread_t threads[NUM_THREADS];
+// 	int thread_args[NUM_THREADS];
+// 	int i = 0;
+
+// 	// Using a while loop to create threads
+// 	while (i < NUM_THREADS)
+// 	{
+// 		thread_args[i] = i; // Assigning an argument to each thread
+// 		if (pthread_create(&threads[i], NULL, thread_function,
+// 				(void *)&thread_args[i]) != 0)
+// 		{
+// 			perror("Failed to create thread");
+// 			return (1);
+// 		}
+// 		i++;
+// 	}
+
+// 	// Using a while loop to join threads
+// 	i = 0;
+// 	while (i < NUM_THREADS)
+// 	{
+// 		if (pthread_join(threads[i], NULL) != 0)
+// 		{
+// 			perror("Failed to join thread");
+// 			return (1);
+// 		}
+// 		i++;
+// 	}
+
+// 	printf("All threads have finished execution.\n");
+
+// 	return (0);
+// }
