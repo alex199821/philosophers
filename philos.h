@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/19 11:26:34 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/19 14:33:39 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_philos
 	pthread_t		philo_thread;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	lock;
 }					t_philos;
 
 typedef struct s_data
@@ -44,6 +45,7 @@ typedef struct s_data
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	pthread_mutex_t	*forks;
 	t_philos		*philos;
 
 }					t_data;

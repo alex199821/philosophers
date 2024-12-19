@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/19 13:44:30 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/19 15:58:10 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,18 @@
 // 	if(UNLOCK == opcode)
 // }
 
-
-
 void	*philosopher_routine(void *arg)
 {
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
-	printf("Philosopher %d is eating.\n", philo->id);
-	usleep(1000 * 1000);
-	printf("Philosopher %d is sleeping.\n", philo->id);
-	usleep(1000 * 1000);
+	while (1)
+	{
+		printf("Philosopher %d is eating.\n", philo->id);
+		usleep(1000 * 1000);
+		printf("Philosopher %d is sleeping.\n", philo->id);
+		usleep(1000 * 1000);
+	}
 	return (NULL);
 }
 
@@ -140,6 +141,7 @@ void	initialize_philos(t_data *data)
 t_data	*initialize_data(void)
 {
 	t_data	*data;
+	int		i;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
@@ -151,6 +153,14 @@ t_data	*initialize_data(void)
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)
 		return (NULL);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philos);
+	i = 0;
+	while (i < data->number_of_philos)
+	{
+		pthread_mutex_init(&data->philos[i].lock, NULL);
+		pthread_mutex_init(&data->forks[i], NULL);
+		i++;
+	}
 	initialize_philos(data);
 	return (data);
 }
