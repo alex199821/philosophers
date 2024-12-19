@@ -6,92 +6,38 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/19 15:58:10 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/19 22:40:31 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philos.h"
 
-// int		balance = 0;
+long long	ft_get_time(void)
+{
+	struct timeval	time;
 
-// void	write_balance(int new_balance)
-// {
-// 	usleep(250000);
-// 	balance = new_balance;
-// }
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
 
-// int	read_balance(void)
-// {
-// 	usleep(250000);
-// 	return (balance);
-// }
+void	philo_think_eat(t_philos *philo, t_data *data)
+{
+	printf("Philosopher %d's left fork is %d.\n", philo->id, philo->left_fork);
+	printf("Philosopher %d's right fork is %d.\n", philo->id, philo->right_fork);
+	printf("Philosopher %d is thinking.\n", philo->id);
+	printf("Philosopher %d has taken a fork.\n", philo->id);
+	printf("Philosopher %d has taken a fork.\n", philo->id);
+	printf("Philosopher %d is eating.\n", philo->id);
+	philo->time_of_last_meal = ft_get_time();
+	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
+	usleep(data->time_to_eat * 1000);
+}
 
-// void	*deposit(void *amount)
-// {
-// 	int	account_balance;
-
-// 	pthread_mutex_lock(&mutex);
-// 	account_balance = read_balance();
-// 	account_balance += *((int *)amount);
-// 	write_balance(account_balance);
-// 	pthread_mutex_unlock(&mutex);
-// 	return (NULL);
-// }
-
-// int	main(void)
-// {
-// 	pthread_mutex_t mutex;
-
-// 	int before = read_balance();
-// 	printf("Before: %d\n", before);
-
-// 	pthread_t thread1;
-// 	pthread_t thread2;
-
-// 	pthread_mutex_init(&mutex, NULL);
-
-// 	int deposit1 = 300;
-// 	int deposit2 = 200;
-
-// 	pthread_create(&thread1, NULL, deposit, (void *)&deposit1);
-// 	pthread_create(&thread2, NULL, deposit, (void *)&deposit2);
-
-// 	pthread_join(thread1, NULL);
-// 	pthread_join(thread2, NULL);
-
-// 	pthread_mutex_destroy(&mutex);
-
-// 	int after = read_balance();
-// 	printf("After: %d\n", after);
-
-// 	return (0);
-// }
-
-// long	time_difference_in_ms(struct timeval *start, struct timeval *end)
-// {
-// 	long	seconds;
-// 	long	microseconds;
-
-// 	seconds = end->tv_sec - start->tv_sec;
-// 	microseconds = end->tv_usec - start->tv_usec;
-// 	return (seconds * 1000) + (microseconds / 1000);
-// }
-
-// int main() {
-//     struct timeval tv;
-//     gettimeofday(&tv, NULL);
-
-//     printf("Seconds: %ld\n", tv.tv_sec);  // seconds since epoch
-//     printf("Microseconds: %ld\n", tv.tv_usec);  // microseconds part
-//     return (0);
-// }
-
-// void mutex_handler(pthread_mutex_t *mutex, t_opcode opcode)
-// {
-// 	if(LOCK == opcode)
-// 		p_thread_mutex_lock(mutex);
-// 	if(UNLOCK == opcode)
-// }
+void	philo_sleep(t_philos *philo, t_data *data)
+{
+	printf("Philosopher %d is sleeping.\n", philo->id);
+	usleep(data->time_to_sleep * 1000);
+}
 
 void	*philosopher_routine(void *arg)
 {
@@ -100,12 +46,41 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philos *)arg;
 	while (1)
 	{
-		printf("Philosopher %d is eating.\n", philo->id);
-		usleep(1000 * 1000);
-		printf("Philosopher %d is sleeping.\n", philo->id);
-		usleep(1000 * 1000);
+		if (ft_get_time() - philo->time_of_last_meal > 800)
+		{
+			printf("Philosopher Died\n");
+			break ;
+		}
+		philo_think_eat(philo, philo->data);
+		philo_sleep(philo, philo->data);
 	}
 	return (NULL);
+}
+
+int	initialize_forks(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	// data->philos[0].left_fork = &data->forks[0];
+	// data->philos[0].right_fork = &data->forks[data->number_of_philos - 1];
+	// i = 1;
+	// while (i < data->number_of_philos)
+	// {
+	// 	data->philos[i].left_fork = &data->forks[i];
+	// 	data->philos[i].right_fork = &data->forks[i - 1];
+	// 	i++;
+	// }
+	data->philos[0].left_fork = 0;
+	data->philos[0].right_fork = data->number_of_philos - 1;
+	i = 1;
+	while (i < data->number_of_philos)
+	{
+		data->philos[i].left_fork = i;
+		data->philos[i].right_fork = i - 1;
+		i++;
+	}
+	return (0);
 }
 
 void	initialize_philos(t_data *data)
@@ -116,7 +91,9 @@ void	initialize_philos(t_data *data)
 	while (i < data->number_of_philos)
 	{
 		data->philos[i].id = i;
+		data->philos[i].data = data;
 		data->philos[i].amount_of_meals_eaten = 0;
+		data->philos[i].time_of_last_meal = ft_get_time();
 		i++;
 	}
 	i = 0;
@@ -162,12 +139,21 @@ t_data	*initialize_data(void)
 		i++;
 	}
 	initialize_philos(data);
+	initialize_forks(data);
 	return (data);
 }
 
 int	main(void)
 {
+	long long	time1;
+	long long	time2;
+
 	initialize_data();
+	// time1 = ft_get_time();
+	// printf("Standart time: %lld\n", time1);
+	// usleep(300000);
+	// time2 = ft_get_time();
+	// printf("Difference in time: %lld\n", time1 - time2);
 	return (0);
 }
 

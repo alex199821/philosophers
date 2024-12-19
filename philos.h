@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/19 14:33:39 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/19 22:27:58 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,19 @@ typedef enum e_opcode
 	DETACH
 }					t_opcode;
 
+struct s_data;
+
 typedef struct s_philos
 {
+	struct s_data	*data;
 	int				id;
 	int				amount_of_meals_eaten;
-	long			time_since_last_meal;
+	long long		time_of_last_meal;
 	pthread_t		philo_thread;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*left_fork;
+	// pthread_mutex_t	*right_fork;
+	// pthread_mutex_t	*left_fork;
+	int				right_fork;
+	int				left_fork;
 	pthread_mutex_t	lock;
 }					t_philos;
 
