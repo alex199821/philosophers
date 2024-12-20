@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/20 14:15:31 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:32:50 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,13 @@ void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 {
 	long long	current_time;
 
+	pthread_mutex_lock(&data->print);
 	current_time = ft_get_time() - data->dinner_start_time;
-	printf("%lld %d is thinking.\n", current_time, philo->id);
+	printf("%lld %d %s", current_time, philo->id, message);
+	pthread_mutex_unlock(&data->print);
 }
 
-void	ft_usleep(long set_miliseconds)
+void	ft_usleep(long long set_miliseconds)
 {
 	long long	start;
 	long long	elapsed;
@@ -52,11 +54,11 @@ void	philo_think_eat(t_philos *philo, t_data *data)
 	// printf("Philosopher %d is thinking.\n", philo->id);
 	ft_custom_message(data, philo, "is thinking\n");
 	pthread_mutex_lock(&data->forks[philo->right_fork]);
-	// printf("Philosopher %d has taken a right fork which is %d.\n", philo->id, philo->right_fork);
+	// printf("Philosopher %d has taken a right fork which is %d.\n", philo->id,philo->right_fork);
 	ft_custom_message(data, philo, "has taken a right fork\n");
 	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	printf("Philosopher %d has taken a left fork.\n", philo->id);
-	// ft_custom_message(data, philo, "has taken a left fork\n");
+	// printf("Philosopher %d has taken a left fork.\n", philo->id);
+	ft_custom_message(data, philo, "has taken a left fork\n");
 	if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
 	{
 		printf("Philosopher Died\n");
@@ -66,8 +68,8 @@ void	philo_think_eat(t_philos *philo, t_data *data)
 	ft_custom_message(data, philo, "is eating\n");
 	philo->time_of_last_meal = ft_get_time();
 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
-	// ft_usleep(data->time_to_eat);
-	usleep(data->time_to_eat * 1000);
+	ft_usleep(data->time_to_eat);
+	// usleep(data->time_to_eat * 1000);
 	pthread_mutex_unlock(&data->forks[philo->right_fork]);
 	pthread_mutex_unlock(&data->forks[philo->left_fork]);
 }
@@ -76,8 +78,8 @@ void	philo_sleep(t_philos *philo, t_data *data)
 {
 	// printf("Philosopher %d is sleeping.\n", philo->id);
 	ft_custom_message(data, philo, "is sleeping\n");
-	usleep(data->time_to_sleep * 1000);
-	// ft_usleep(data->time_to_sleep);
+	// usleep(data->time_to_sleep * 1000);
+	ft_usleep(data->time_to_sleep);
 }
 
 void	*philosopher_routine(void *arg)
@@ -172,6 +174,7 @@ t_data	*initialize_data(void)
 	data->time_to_sleep = 200;
 	data->time_to_eat = 200;
 	data->dinner_start_time = ft_get_time();
+	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)
 		return (NULL);
