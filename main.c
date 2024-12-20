@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/20 22:07:22 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/20 23:09:41 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ long long	ft_get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
+
 void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 {
 	long long	current_time;
@@ -28,6 +29,23 @@ void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 	current_time = ft_get_time() - data->dinner_start_time;
 	printf("%lld %d %s", current_time, philo->id, message);
 	pthread_mutex_unlock(&data->print);
+}
+
+void ft_check_death(t_data *data)
+{
+	int i;
+
+	while(true)
+	{
+		i = 0;
+		if(ft_get_time() - data->philos[i].time_of_last_meal > data->time_to_die)
+		{
+			data->dead_philo = true;
+			ft_custom_message(data, &data->philos[i], "died\n");
+			return;
+		}
+		i++;
+	}
 }
 
 void	ft_usleep(long long set_miliseconds)
@@ -97,9 +115,8 @@ void	philo_think_eat(t_philos *philo, t_data *data)
 {
 	ft_custom_message(data, philo, "is thinking\n");
 	take_forks(philo, data);
-	if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
+	if (data->dead_philo)
 	{
-		printf("Philosopher Died\n");
 		return ;
 	}
 	philo_eat(philo, data);
@@ -111,7 +128,7 @@ void	philo_sleep(t_philos *philo, t_data *data)
 	// printf("Philosopher %d is sleeping.\n", philo->id);
 	ft_custom_message(data, philo, "is sleeping\n");
 	// usleep(data->time_to_sleep * 1000);
-	usleep(data->time_to_sleep * 1000);
+	ft_usleep(data->time_to_sleep);
 }
 
 void	*philosopher_routine(void *arg)
@@ -121,9 +138,9 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philos *)arg;
 	while (1)
 	{
-		if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
+		if (philo->data->dead_philo)
 		{
-			printf("Philosopher Died\n");
+			// ft_custom_message(philo->data, philo, "died\n");
 			break ;
 		}
 		philo_think_eat(philo, philo->data);
@@ -176,6 +193,7 @@ void	initialize_philos(t_data *data)
 		i++;
 	}
 	i = 0;
+	ft_check_death(data);
 	while (i < data->number_of_philos)
 	{
 		pthread_join(data->philos[i].philo_thread, NULL);
@@ -191,9 +209,10 @@ t_data	*initialize_data(void)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	data->number_of_philos = 200;
+	data->dead_philo = false;
+	data->number_of_philos = 1;
 	data->amounto_of_meals = 5;
-	data->time_to_die = 800;
+	data->time_to_die = 410;
 	data->time_to_sleep = 200;
 	data->time_to_eat = 200;
 	data->dinner_start_time = ft_get_time();
