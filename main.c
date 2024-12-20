@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/20 14:32:50 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:34:29 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,18 @@ void	ft_usleep(long long set_miliseconds)
 	}
 }
 
+void take_forks(t_philos *philo, t_data *data)
+{
+	pthread_mutex_lock(&data->forks[philo->right_fork]);
+	ft_custom_message(data, philo, "has taken a fork\n");
+	pthread_mutex_lock(&data->forks[philo->left_fork]);
+	ft_custom_message(data, philo, "has taken a fork\n");
+}
+
 void	philo_think_eat(t_philos *philo, t_data *data)
 {
-	// printf("Philosopher %d is thinking.\n", philo->id);
 	ft_custom_message(data, philo, "is thinking\n");
-	pthread_mutex_lock(&data->forks[philo->right_fork]);
-	// printf("Philosopher %d has taken a right fork which is %d.\n", philo->id,philo->right_fork);
-	ft_custom_message(data, philo, "has taken a right fork\n");
-	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	// printf("Philosopher %d has taken a left fork.\n", philo->id);
-	ft_custom_message(data, philo, "has taken a left fork\n");
+	take_forks(philo, data);
 	if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
 	{
 		printf("Philosopher Died\n");
@@ -114,13 +116,13 @@ int	initialize_forks(t_data *data)
 	// 	data->philos[i].right_fork = &data->forks[i - 1];
 	// 	i++;
 	// }
-	data->philos[0].left_fork = 0;
-	data->philos[0].right_fork = data->number_of_philos - 1;
+	data->philos[0].right_fork = 0;
+	data->philos[0].left_fork = data->number_of_philos - 1;
 	i = 1;
 	while (i < data->number_of_philos)
 	{
-		data->philos[i].left_fork = i;
-		data->philos[i].right_fork = i - 1;
+		data->philos[i].left_fork = i - 1;
+		data->philos[i].right_fork = i;
 		i++;
 	}
 	return (0);
@@ -168,7 +170,7 @@ t_data	*initialize_data(void)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	data->number_of_philos = 8;
+	data->number_of_philos = 9;
 	data->amounto_of_meals = 5;
 	data->time_to_die = 800;
 	data->time_to_sleep = 200;
