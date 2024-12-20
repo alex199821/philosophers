@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/20 16:34:29 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:07:22 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,48 @@ void	ft_usleep(long long set_miliseconds)
 	}
 }
 
-void take_forks(t_philos *philo, t_data *data)
+void	take_forks(t_philos *philo, t_data *data)
 {
-	pthread_mutex_lock(&data->forks[philo->right_fork]);
-	ft_custom_message(data, philo, "has taken a fork\n");
-	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	ft_custom_message(data, philo, "has taken a fork\n");
+	if (philo->right_fork > philo->left_fork)
+	{
+		pthread_mutex_lock(&data->forks[philo->left_fork]);
+		ft_custom_message(data, philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->right_fork]);
+		ft_custom_message(data, philo, "has taken a fork\n");
+	}
+	else
+	{
+		pthread_mutex_lock(&data->forks[philo->right_fork]);
+		ft_custom_message(data, philo, "has taken a fork\n");
+		pthread_mutex_lock(&data->forks[philo->left_fork]);
+		ft_custom_message(data, philo, "has taken a fork\n");
+	}
+}
+
+void	philo_eat(t_philos *philo, t_data *data)
+{
+	ft_custom_message(data, philo, "is eating\n");
+	pthread_mutex_lock(&philo->lock);
+	philo->time_of_last_meal = ft_get_time();
+	pthread_mutex_unlock(&philo->lock);
+	ft_usleep(data->time_to_eat);
+	pthread_mutex_lock(&philo->lock);
+	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
+	pthread_mutex_unlock(&philo->lock);
+}
+
+void	drop_forks(t_philos *philo, t_data *data)
+{
+	if (philo->right_fork > philo->left_fork)
+	{
+		pthread_mutex_unlock(&data->forks[philo->left_fork]);
+		pthread_mutex_unlock(&data->forks[philo->right_fork]);
+	}
+	else
+	{
+		pthread_mutex_unlock(&data->forks[philo->right_fork]);
+		pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	}
 }
 
 void	philo_think_eat(t_philos *philo, t_data *data)
@@ -66,14 +102,8 @@ void	philo_think_eat(t_philos *philo, t_data *data)
 		printf("Philosopher Died\n");
 		return ;
 	}
-	// printf("Philosopher %d is eating.\n", philo->id);
-	ft_custom_message(data, philo, "is eating\n");
-	philo->time_of_last_meal = ft_get_time();
-	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
-	ft_usleep(data->time_to_eat);
-	// usleep(data->time_to_eat * 1000);
-	pthread_mutex_unlock(&data->forks[philo->right_fork]);
-	pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	philo_eat(philo, data);
+	drop_forks(philo, data);
 }
 
 void	philo_sleep(t_philos *philo, t_data *data)
@@ -81,7 +111,7 @@ void	philo_sleep(t_philos *philo, t_data *data)
 	// printf("Philosopher %d is sleeping.\n", philo->id);
 	ft_custom_message(data, philo, "is sleeping\n");
 	// usleep(data->time_to_sleep * 1000);
-	ft_usleep(data->time_to_sleep);
+	usleep(data->time_to_sleep * 1000);
 }
 
 void	*philosopher_routine(void *arg)
@@ -107,15 +137,6 @@ int	initialize_forks(t_data *data)
 	int	i;
 
 	i = 0;
-	// data->philos[0].left_fork = &data->forks[0];
-	// data->philos[0].right_fork = &data->forks[data->number_of_philos - 1];
-	// i = 1;
-	// while (i < data->number_of_philos)
-	// {
-	// 	data->philos[i].left_fork = &data->forks[i];
-	// 	data->philos[i].right_fork = &data->forks[i - 1];
-	// 	i++;
-	// }
 	data->philos[0].right_fork = 0;
 	data->philos[0].left_fork = data->number_of_philos - 1;
 	i = 1;
@@ -170,7 +191,7 @@ t_data	*initialize_data(void)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	data->number_of_philos = 9;
+	data->number_of_philos = 200;
 	data->amounto_of_meals = 5;
 	data->time_to_die = 800;
 	data->time_to_sleep = 200;

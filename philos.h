@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/20 14:27:55 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/20 21:41:48 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef struct s_data
 	long long		time_to_eat;
 	long long		time_to_sleep;
 	long long		dinner_start_time;
+	bool			dead_philo;
+	pthread_t		monitor_thread;
 	pthread_mutex_t	print;
 	pthread_mutex_t	*forks;
 	t_philos		*philos;
