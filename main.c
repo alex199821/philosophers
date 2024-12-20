@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/19 22:40:31 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/20 10:25:10 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,22 @@ long long	ft_get_time(void)
 
 void	philo_think_eat(t_philos *philo, t_data *data)
 {
-	printf("Philosopher %d's left fork is %d.\n", philo->id, philo->left_fork);
-	printf("Philosopher %d's right fork is %d.\n", philo->id, philo->right_fork);
 	printf("Philosopher %d is thinking.\n", philo->id);
-	printf("Philosopher %d has taken a fork.\n", philo->id);
-	printf("Philosopher %d has taken a fork.\n", philo->id);
+	pthread_mutex_lock(&data->forks[philo->right_fork]);
+	printf("Philosopher %d has taken a right fork.\n", philo->id);
+	pthread_mutex_lock(&data->forks[philo->left_fork]);
+	printf("Philosopher %d has taken a left fork.\n", philo->id);
+	if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
+	{
+		printf("Philosopher Died\n");
+		return ;
+	}
 	printf("Philosopher %d is eating.\n", philo->id);
 	philo->time_of_last_meal = ft_get_time();
 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
 	usleep(data->time_to_eat * 1000);
+	pthread_mutex_unlock(&data->forks[philo->right_fork]);
+	pthread_mutex_unlock(&data->forks[philo->left_fork]);
 }
 
 void	philo_sleep(t_philos *philo, t_data *data)
@@ -46,7 +53,7 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philos *)arg;
 	while (1)
 	{
-		if (ft_get_time() - philo->time_of_last_meal > 800)
+		if (ft_get_time() - philo->time_of_last_meal > philo->data->time_to_die)
 		{
 			printf("Philosopher Died\n");
 			break ;
@@ -77,6 +84,7 @@ int	initialize_forks(t_data *data)
 	while (i < data->number_of_philos)
 	{
 		data->philos[i].left_fork = i;
+		// printf("TESTT: %d\n", data->philos[i].left_fork);
 		data->philos[i].right_fork = i - 1;
 		i++;
 	}
@@ -97,6 +105,7 @@ void	initialize_philos(t_data *data)
 		i++;
 	}
 	i = 0;
+	initialize_forks(data);
 	while (i < data->number_of_philos)
 	{
 		if (pthread_create(&data->philos[i].philo_thread, NULL,
@@ -123,10 +132,11 @@ t_data	*initialize_data(void)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
-	data->number_of_philos = 9;
+	data->number_of_philos = 12;
 	data->amounto_of_meals = 5;
-	data->time_to_die = 800;
+	data->time_to_die = 300;
 	data->time_to_sleep = 200;
+	data->time_to_eat = 200;
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)
 		return (NULL);
@@ -139,7 +149,6 @@ t_data	*initialize_data(void)
 		i++;
 	}
 	initialize_philos(data);
-	initialize_forks(data);
 	return (data);
 }
 
