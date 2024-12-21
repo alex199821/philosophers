@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/21 00:56:30 by auplisas         ###   ########.fr       */
+/*   Updated: 2024/12/21 07:37:16 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,13 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 {
 	ft_custom_message(data, philo, "is thinking\n");
 	take_forks(philo, data);
+	pthread_mutex_lock(&philo->lock);
 	if (data->dead_philo)
 	{
+		pthread_mutex_unlock(&philo->lock);
 		return (false);
 	}
+	pthread_mutex_unlock(&philo->lock);
 	philo_eat(philo, data);
 	drop_forks(philo, data);
 	return (true);
@@ -155,6 +158,8 @@ void	*philosopher_routine(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	if (philo->id % 2 == 0)
+		ft_usleep(philo->data->time_to_eat / 2);
 	while (1)
 	{
 		if (!philo_think_eat(philo, philo->data))
@@ -235,6 +240,7 @@ t_data	*initialize_data(void)
 	data->time_to_sleep = 200;
 	data->time_to_eat = 200;
 	data->dinner_start_time = ft_get_time();
+	pthread_mutex_init(&data->dead_mutex, NULL);	
 	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)
