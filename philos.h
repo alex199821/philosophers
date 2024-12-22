@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/21 07:26:16 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/22 16:22:23 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,25 @@ typedef struct s_data
 	bool			dead_philo;
 	pthread_t		monitor_thread;
 	pthread_mutex_t	print;
-    pthread_mutex_t	dead_mutex;
+	pthread_mutex_t	dead_mutex;
 	pthread_mutex_t	*forks;
 	t_philos		*philos;
 
 }					t_data;
+
+// dead.c
+bool				ft_is_dead(t_data *data);
+void				ft_death_message(t_data *data, t_philos *philo);
+bool				ft_check_death(t_data *data);
+// initialize.c
+t_data				*initialize_data(void);
+// message.c
+void				ft_custom_message(t_data *data, t_philos *philo,
+						char *message);
+// time.c
+long long			ft_get_time(void);
+// usleep.c
+void				ft_usleep(useconds_t usec);
+// main.c
+int					main(void);
+void				*philosopher_routine(void *arg);

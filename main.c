@@ -6,86 +6,22 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/21 07:37:16 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/22 16:18:53 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philos.h"
 
-long long	ft_get_time(void)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void	ft_custom_message(t_data *data, t_philos *philo, char *message)
-{
-	long long	current_time;
-
-	pthread_mutex_lock(&data->print);
-	current_time = ft_get_time() - data->dinner_start_time;
-	printf("%lld %d %s", current_time, philo->id, message);
-	pthread_mutex_unlock(&data->print);
-}
-
-bool	ft_check_death(t_data *data)
-{
-	int			i;
-	long long	time_since_last_meal;
-
-	while (true)
-	{
-		i = 0;
-		while (i < data->number_of_philos)
-		{
-			pthread_mutex_lock(&data->philos[i].lock);
-			time_since_last_meal = ft_get_time()
-				- data->philos[i].time_of_last_meal;
-			if (time_since_last_meal > data->time_to_die)
-			{
-				data->dead_philo = true;
-				ft_custom_message(data, &data->philos[i], "died\n");
-				pthread_mutex_unlock(&data->philos[i].lock);
-				return (false);
-			}
-			pthread_mutex_unlock(&data->philos[i].lock); 
-			i++;
-		}
-	}
-	return (true);
-}
-
-void	ft_usleep(long long set_miliseconds)
-{
-	long long	start;
-	long long	elapsed;
-	long long	remaining;
-
-	start = ft_get_time();
-	while (ft_get_time() - start < set_miliseconds)
-	{
-		elapsed = ft_get_time() - start;
-		remaining = set_miliseconds - elapsed;
-		if (remaining > 1000)
-			usleep(set_miliseconds / 2);
-		else
-			while (ft_get_time() - start < set_miliseconds)
-				;
-	}
-}
-
 void	take_forks(t_philos *philo, t_data *data)
 {
-	if (philo->right_fork > philo->left_fork)
+	if (philo->left_fork > philo->right_fork)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
 		ft_custom_message(data, philo, "has taken a fork\n");
 		pthread_mutex_lock(&data->forks[philo->right_fork]);
 		ft_custom_message(data, philo, "has taken a fork\n");
 	}
-	else if (philo->right_fork < philo->left_fork)
+	else if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_lock(&data->forks[philo->right_fork]);
 		ft_custom_message(data, philo, "has taken a fork\n");
@@ -96,7 +32,7 @@ void	take_forks(t_philos *philo, t_data *data)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
 		ft_custom_message(data, philo, "has taken a fork\n");
-		while (ft_check_death(data))
+		while (ft_is_dead(data))
 		{
 			ft_usleep(100);
 		}
@@ -117,14 +53,28 @@ void	philo_eat(t_philos *philo, t_data *data)
 
 void	drop_forks(t_philos *philo, t_data *data)
 {
-	if (philo->right_fork > philo->left_fork)
+	// if (philo->right_fork > philo->left_fork)
+	// {
+	// 	pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	// 	pthread_mutex_unlock(&data->forks[philo->right_fork]);
+	// }
+	// else
+	// {
+	// 	pthread_mutex_unlock(&data->forks[philo->right_fork]);
+	// 	pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	// }
+	if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_unlock(&data->forks[philo->left_fork]);
 		pthread_mutex_unlock(&data->forks[philo->right_fork]);
 	}
-	else
+	else if (philo->left_fork > philo->right_fork)
 	{
 		pthread_mutex_unlock(&data->forks[philo->right_fork]);
+		pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	}
+	else
+	{
 		pthread_mutex_unlock(&data->forks[philo->left_fork]);
 	}
 }
@@ -134,11 +84,15 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 	ft_custom_message(data, philo, "is thinking\n");
 	take_forks(philo, data);
 	pthread_mutex_lock(&philo->lock);
-	if (data->dead_philo)
-	{
-		pthread_mutex_unlock(&philo->lock);
-		return (false);
-	}
+	pthread_mutex_lock(&data->dead_mutex);
+	// if (data->dead_philo)
+	// {
+	// 	pthread_mutex_unlock(&data->dead_mutex);
+	// 	pthread_mutex_unlock(&philo->lock);
+	// 	drop_forks(philo, data);
+	// 	return (false);
+	// }
+	pthread_mutex_unlock(&data->dead_mutex);
 	pthread_mutex_unlock(&philo->lock);
 	philo_eat(philo, data);
 	drop_forks(philo, data);
@@ -169,99 +123,13 @@ void	*philosopher_routine(void *arg)
 		}
 		// philo_think_eat(philo, philo->data);
 		philo_sleep(philo, philo->data);
+		usleep(100);
 	}
 	return (NULL);
 }
 
-int	initialize_forks(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	data->philos[0].right_fork = 0;
-	data->philos[0].left_fork = data->number_of_philos - 1;
-	i = 1;
-	while (i < data->number_of_philos)
-	{
-		data->philos[i].left_fork = i - 1;
-		data->philos[i].right_fork = i;
-		i++;
-	}
-	return (0);
-}
-
-void	initialize_philos(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->number_of_philos)
-	{
-		data->philos[i].id = i;
-		data->philos[i].data = data;
-		data->philos[i].amount_of_meals_eaten = 0;
-		data->philos[i].time_of_last_meal = ft_get_time();
-		data->philos[i].dead = false;
-		i++;
-	}
-	i = 0;
-	initialize_forks(data);
-	while (i < data->number_of_philos)
-	{
-		if (pthread_create(&data->philos[i].philo_thread, NULL,
-				(void *)philosopher_routine, &data->philos[i]) != 0)
-		{
-			perror("Failed to create philosopher thread");
-			exit(1);
-		}
-		i++;
-	}
-	i = 0;
-	ft_check_death(data);
-	while (i < data->number_of_philos)
-	{
-		pthread_join(data->philos[i].philo_thread, NULL);
-		i++;
-	}
-}
-
-t_data	*initialize_data(void)
-{
-	t_data	*data;
-	int		i;
-
-	data = malloc(sizeof(t_data));
-	if (!data)
-		return (NULL);
-	data->dead_philo = false;
-	data->number_of_philos = 4;
-	data->amounto_of_meals = 5;
-	data->time_to_die = 410;
-	data->time_to_sleep = 200;
-	data->time_to_eat = 200;
-	data->dinner_start_time = ft_get_time();
-	pthread_mutex_init(&data->dead_mutex, NULL);	
-	pthread_mutex_init(&data->print, NULL);
-	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
-	if (!data->philos)
-		return (NULL);
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philos);
-	i = 0;
-	while (i < data->number_of_philos)
-	{
-		pthread_mutex_init(&data->philos[i].lock, NULL);
-		pthread_mutex_init(&data->forks[i], NULL);
-		i++;
-	}
-	initialize_philos(data);
-	return (data);
-}
-
 int	main(void)
-{
-	long long	time1;
-	long long	time2;
-
+{ 
 	initialize_data();
 	// time1 = ft_get_time();
 	// printf("Standart time: %lld\n", time1);
