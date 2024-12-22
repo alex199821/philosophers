@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 16:18:53 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/22 23:27:44 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	take_forks(t_philos *philo, t_data *data)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
 		ft_custom_message(data, philo, "has taken a fork\n");
-		while (ft_is_dead(data))
+		while (!ft_is_dead(data))
 		{
 			ft_usleep(100);
 		}
@@ -84,15 +84,12 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 	ft_custom_message(data, philo, "is thinking\n");
 	take_forks(philo, data);
 	pthread_mutex_lock(&philo->lock);
-	pthread_mutex_lock(&data->dead_mutex);
-	// if (data->dead_philo)
-	// {
-	// 	pthread_mutex_unlock(&data->dead_mutex);
-	// 	pthread_mutex_unlock(&philo->lock);
-	// 	drop_forks(philo, data);
-	// 	return (false);
-	// }
-	pthread_mutex_unlock(&data->dead_mutex);
+	if (ft_is_dead(data))
+	{
+		pthread_mutex_unlock(&philo->lock);
+		drop_forks(philo, data);
+		return (false);
+	}
 	pthread_mutex_unlock(&philo->lock);
 	philo_eat(philo, data);
 	drop_forks(philo, data);
@@ -101,9 +98,7 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 
 void	philo_sleep(t_philos *philo, t_data *data)
 {
-	// printf("Philosopher %d is sleeping.\n", philo->id);
 	ft_custom_message(data, philo, "is sleeping\n");
-	// usleep(data->time_to_sleep * 1000);
 	ft_usleep(data->time_to_sleep);
 }
 
@@ -114,7 +109,7 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philos *)arg;
 	if (philo->id % 2 == 0)
 		ft_usleep(philo->data->time_to_eat / 2);
-	while (1)
+	while (!ft_is_dead(philo->data))
 	{
 		if (!philo_think_eat(philo, philo->data))
 		{
@@ -131,11 +126,6 @@ void	*philosopher_routine(void *arg)
 int	main(void)
 { 
 	initialize_data();
-	// time1 = ft_get_time();
-	// printf("Standart time: %lld\n", time1);
-	// usleep(300000);
-	// time2 = ft_get_time();
-	// printf("Difference in time: %lld\n", time1 - time2);
 	return (0);
 }
 

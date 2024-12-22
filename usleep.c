@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:13:43 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 16:13:53 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/22 20:45:46 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,3 +41,18 @@ void	ft_usleep(useconds_t usec)
 		usleep(100);
 	}
 }
+
+// void	ft_usleep(useconds_t usec)
+// {
+// 	struct timespec start, end;
+// 	long long elapsed = 0;
+	
+// 	clock_gettime(CLOCK_MONOTONIC, &start); // Start time
+// 	while (elapsed < usec)
+// 	{
+// 		usleep(100); // Sleep for a short interval
+// 		clock_gettime(CLOCK_MONOTONIC, &end); // Current time
+// 		elapsed = ((end.tv_sec - start.tv_sec) * 1000000)
+// 			+ ((end.tv_nsec - start.tv_nsec) / 1000);
+// 	}
+// }

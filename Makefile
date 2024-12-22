@@ -6,22 +6,22 @@
 #    By: macbook <macbook@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/22 16:08:14 by macbook           #+#    #+#              #
-#    Updated: 2024/12/22 16:09:22 by macbook          ###   ########.fr        #
+#    Updated: 2024/12/22 16:27:13 by macbook          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra
 MAKE_LIB = ar -rcs
 
-SRCS = main.c
+SRCS = main.c dead.c initialize.c message.c time.c usleep.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) -L -lft
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
