@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 17:10:20 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 21:56:21 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,17 @@ void	take_forks(t_philos *philo, t_data *data)
 	}
 }
 
-void	philo_eat(t_philos *philo, t_data *data)
-{
-	ft_custom_message(data, philo, "is eating\n");
-	pthread_mutex_lock(&philo->lock);
-	philo->time_of_last_meal = ft_get_time();
-	pthread_mutex_unlock(&philo->lock);
-	ft_usleep(data->time_to_eat);
-	pthread_mutex_lock(&philo->lock);
-	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
-	pthread_mutex_unlock(&philo->lock);
-}
+// void	philo_eat(t_philos *philo, t_data *data)
+// {
+// 	ft_custom_message(data, philo, "is eating\n");
+// 	pthread_mutex_lock(&philo->lock);
+// 	philo->time_of_last_meal = ft_get_time();
+// 	pthread_mutex_unlock(&philo->lock);
+// 	ft_usleep(data->time_to_eat);
+// 	pthread_mutex_lock(&philo->lock);
+// 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
+// 	pthread_mutex_unlock(&philo->lock);
+// }
 
 void	drop_forks(t_philos *philo, t_data *data)
 {
@@ -99,7 +99,7 @@ void	drop_forks(t_philos *philo, t_data *data)
 	}
 }
 
-bool	philo_think_eat(t_philos *philo, t_data *data)
+bool	philo_eat(t_philos *philo, t_data *data)
 {
 	take_forks(philo, data);
 	pthread_mutex_lock(&philo->lock);
@@ -110,12 +110,20 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 		return (false);
 	}
 	pthread_mutex_unlock(&philo->lock);
-	philo_eat(philo, data);
+	// philo_eat(philo, data);
+	ft_custom_message(data, philo, "is eating\n");
+	pthread_mutex_lock(&philo->lock);
+	philo->time_of_last_meal = ft_get_time();
+	pthread_mutex_unlock(&philo->lock);
+	ft_usleep(data->time_to_eat);
+	pthread_mutex_lock(&philo->lock);
+	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
+	pthread_mutex_unlock(&philo->lock);
 	drop_forks(philo, data);
 	return (true);
 }
 
-void philo_thinking(t_philos *philo, t_data *data)
+void	philo_thinking(t_philos *philo, t_data *data)
 {
 	ft_custom_message(data, philo, "is thinking\n");
 }
@@ -135,13 +143,13 @@ void	*philosopher_routine(void *arg)
 		ft_usleep(philo->data->time_to_eat / 2);
 	while (!ft_is_dead(philo->data))
 	{
-		if (!philo_think_eat(philo, philo->data))
+		if (!philo_eat(philo, philo->data))
 		{
 			// ft_custom_message(philo->data, philo, "died\n");
 			return (NULL);
 		}
-		// philo_think_eat(philo, philo->data);
 		philo_sleep(philo, philo->data);
+		philo_thinking(philo, philo->data);
 		usleep(100);
 	}
 	return (NULL);
@@ -163,7 +171,7 @@ void	dinner_start(t_data *data)
 	}
 	i = 0;
 	ft_check_death(data);
-	// pthread_create(&data->monitor_thread, NULL, (void *)ft_check_death, &data);
+	// pthread_create(&data->monitor_thread, NULL, (void *)ft_check_death,&data);
 	while (i < data->number_of_philos)
 	{
 		pthread_join(data->philos[i].philo_thread, NULL);

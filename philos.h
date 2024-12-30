@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 17:02:19 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 21:52:07 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_data
 	long long		time_to_sleep;
 	long long		dinner_start_time;
 	bool			dead_philo;
+	bool			all_threads_ready;
+	pthread_mutex_t		table_mutex;
 	pthread_t		monitor_thread;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead_mutex;
@@ -67,7 +69,7 @@ typedef struct s_data
 bool				ft_is_dead(t_data *data);
 void				ft_death_message(t_data *data, t_philos *philo);
 // bool				ft_check_death(void *args);
-bool	ft_check_death(t_data *data);
+bool				ft_check_death(t_data *data);
 // initialize.c
 void				initialize_data(t_data *data);
 // message.c

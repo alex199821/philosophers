@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 16:21:25 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 21:53:19 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,25 @@ void	initialize_philos(t_data *data)
 		data->philos[i].dead = false;
 		i++;
 	}
+	i = 0;
 	initialize_forks(data);
+	// while (i < data->number_of_philos)
+	// {
+	// 	if (pthread_create(&data->philos[i].philo_thread, NULL,
+	// 			(void *)philosopher_routine, &data->philos[i]) != 0)
+	// 	{
+	// 		perror("Failed to create philosopher thread");
+	// 		exit(1);
+	// 	}
+	// 	i++;
+	// }
+	// i = 0;
+	// ft_check_death(data);
+	// while (i < data->number_of_philos)
+	// {
+	// 	pthread_join(data->philos[i].philo_thread, NULL);
+	// 	i++;
+	// }
 }
 
 void	initialize_mutexes(t_data *data)
@@ -62,7 +80,9 @@ void	initialize_mutexes(t_data *data)
 void initialize_data(t_data *data)
 {
 	data->dead_philo = false;
+	data->all_threads_ready = false;
 	data->dinner_start_time = ft_get_time();
+	// pthread_mutex_init(&data->table_mutex, NULL);
 	pthread_mutex_init(&data->dead_mutex, NULL);
 	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
