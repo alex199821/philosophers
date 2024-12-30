@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 15:46:54 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:02:19 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ typedef struct s_data
 // dead.c
 bool				ft_is_dead(t_data *data);
 void				ft_death_message(t_data *data, t_philos *philo);
-bool				ft_check_death(t_data *data);
+// bool				ft_check_death(void *args);
+bool	ft_check_death(t_data *data);
 // initialize.c
 void				initialize_data(t_data *data);
 // message.c

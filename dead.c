@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:17:51 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 23:28:10 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:01:50 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,15 @@ void	ft_death_message(t_data *data, t_philos *philo)
 	pthread_mutex_unlock(&data->print);
 }
 
+// bool	ft_check_death(void *args)
 bool	ft_check_death(t_data *data)
 {
-	int			i;
-	long long	time_since_last_meal;
+	int i;
+	long long time_since_last_meal;
 	long long current_time;
+	// t_data *data;
+
+	// data = (t_data *)args;
 	while (true)
 	{
 		i = 0;
@@ -49,7 +53,7 @@ bool	ft_check_death(t_data *data)
 				- data->philos[i].time_of_last_meal;
 			if (time_since_last_meal > data->time_to_die)
 			{
-				if(data->dead_philo == false)
+				if (data->dead_philo == false)
 				{
 					pthread_mutex_lock(&data->dead_mutex);
 					data->dead_philo = true;

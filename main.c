@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 15:48:50 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 17:10:20 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	drop_forks(t_philos *philo, t_data *data)
 
 bool	philo_think_eat(t_philos *philo, t_data *data)
 {
-	ft_custom_message(data, philo, "is thinking\n");
 	take_forks(philo, data);
 	pthread_mutex_lock(&philo->lock);
 	if (ft_is_dead(data))
@@ -114,6 +113,11 @@ bool	philo_think_eat(t_philos *philo, t_data *data)
 	philo_eat(philo, data);
 	drop_forks(philo, data);
 	return (true);
+}
+
+void philo_thinking(t_philos *philo, t_data *data)
+{
+	ft_custom_message(data, philo, "is thinking\n");
 }
 
 void	philo_sleep(t_philos *philo, t_data *data)
@@ -143,11 +147,30 @@ void	*philosopher_routine(void *arg)
 	return (NULL);
 }
 
-// int	main(void)
-// { 
-// 	// initialize_data();
-// 	return (0);
-// }
+void	dinner_start(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->number_of_philos)
+	{
+		if (pthread_create(&data->philos[i].philo_thread, NULL,
+				(void *)philosopher_routine, &data->philos[i]) != 0)
+		{
+			print_error_exit("Wrong Input");
+		}
+		i++;
+	}
+	i = 0;
+	ft_check_death(data);
+	// pthread_create(&data->monitor_thread, NULL, (void *)ft_check_death, &data);
+	while (i < data->number_of_philos)
+	{
+		pthread_join(data->philos[i].philo_thread, NULL);
+		i++;
+	}
+	// pthread_join(data->monitor_thread, NULL);
+}
 
 int	main(int argc, char *argv[])
 {
@@ -156,52 +179,15 @@ int	main(int argc, char *argv[])
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (1);
-
 	if (argc == 5 || argc == 6)
 	{
-        parse_input(data, argv);
-        initialize_data(data);
-        // dinner_start(&data);
-        // clean(&data);
+		parse_input(data, argv);
+		initialize_data(data);
+		dinner_start(data);
+		// clean(&data);
 	}
 	else
 	{
 		print_error_exit("Wrong Input");
 	}
 }
-
-// int	main(void)
-// {
-// 	pthread_t threads[NUM_THREADS];
-// 	int thread_args[NUM_THREADS];
-// 	int i = 0;
-
-// 	// Using a while loop to create threads
-// 	while (i < NUM_THREADS)
-// 	{
-// 		thread_args[i] = i; // Assigning an argument to each thread
-// 		if (pthread_create(&threads[i], NULL, thread_function,
-// 				(void *)&thread_args[i]) != 0)
-// 		{
-// 			perror("Failed to create thread");
-// 			return (1);
-// 		}
-// 		i++;
-// 	}
-
-// 	// Using a while loop to join threads
-// 	i = 0;
-// 	while (i < NUM_THREADS)
-// 	{
-// 		if (pthread_join(threads[i], NULL) != 0)
-// 		{
-// 			perror("Failed to join thread");
-// 			return (1);
-// 		}
-// 		i++;
-// 	}
-
-// 	printf("All threads have finished execution.\n");
-
-// 	return (0);
-// }

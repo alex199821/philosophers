@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 15:48:59 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 16:21:25 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,25 +43,7 @@ void	initialize_philos(t_data *data)
 		data->philos[i].dead = false;
 		i++;
 	}
-	i = 0;
 	initialize_forks(data);
-	while (i < data->number_of_philos)
-	{
-		if (pthread_create(&data->philos[i].philo_thread, NULL,
-				(void *)philosopher_routine, &data->philos[i]) != 0)
-		{
-			perror("Failed to create philosopher thread");
-			exit(1);
-		}
-		i++;
-	}
-	i = 0;
-	ft_check_death(data);
-	while (i < data->number_of_philos)
-	{
-		pthread_join(data->philos[i].philo_thread, NULL);
-		i++;
-	}
 }
 
 void	initialize_mutexes(t_data *data)
