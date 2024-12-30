@@ -6,11 +6,31 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 23:27:44 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 13:11:16 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philos.h"
+
+// void take_forks(t_philos *philo, t_data *data)
+// {
+//     if (philo->id % 2 == 0)  // Even philosopher
+//     {
+//         // Even philosophers pick up the left fork first
+//         pthread_mutex_lock(&data->forks[philo->left_fork]);
+//         ft_custom_message(data, philo, "has taken a fork\n");
+//         pthread_mutex_lock(&data->forks[philo->right_fork]);
+//         ft_custom_message(data, philo, "has taken a fork\n");
+//     }
+//     else  // Odd philosopher
+//     {
+//         // Odd philosophers pick up the right fork first
+//         pthread_mutex_lock(&data->forks[philo->right_fork]);
+//         ft_custom_message(data, philo, "has taken a fork\n");
+//         pthread_mutex_lock(&data->forks[philo->left_fork]);
+//         ft_custom_message(data, philo, "has taken a fork\n");
+//     }
+// }
 
 void	take_forks(t_philos *philo, t_data *data)
 {
@@ -123,10 +143,31 @@ void	*philosopher_routine(void *arg)
 	return (NULL);
 }
 
-int	main(void)
-{ 
-	initialize_data();
-	return (0);
+// int	main(void)
+// { 
+// 	// initialize_data();
+// 	return (0);
+// }
+
+int	main(int argc, char *argv[])
+{
+	t_data	*data;
+
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (NULL);
+
+	if (argc == 5 || argc == 6)
+	{
+        parse_input(&data, argv);
+        initialize_data(&data);
+        dinner_start(&data);
+        // clean(&data);
+	}
+	else
+	{
+		error_exit("Wrong Input");
+	}
 }
 
 // int	main(void)

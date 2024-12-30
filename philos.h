@@ -6,10 +6,11 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 23:27:06 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 13:11:01 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -67,7 +68,7 @@ bool				ft_is_dead(t_data *data);
 void				ft_death_message(t_data *data, t_philos *philo);
 bool				ft_check_death(t_data *data);
 // initialize.c
-t_data				*initialize_data(void);
+void				initialize_data(t_data *data);
 // message.c
 void				ft_custom_message(t_data *data, t_philos *philo,
 						char *message);
@@ -79,3 +80,6 @@ void				ft_usleep(useconds_t usec);
 // main.c
 int					main(void);
 void				*philosopher_routine(void *arg);
+
+// utils.c
+void				print_error_exit(char *error_message);
