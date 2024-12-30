@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 13:11:16 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:48:50 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,18 +155,18 @@ int	main(int argc, char *argv[])
 
 	data = malloc(sizeof(t_data));
 	if (!data)
-		return (NULL);
+		return (1);
 
 	if (argc == 5 || argc == 6)
 	{
-        parse_input(&data, argv);
-        initialize_data(&data);
-        dinner_start(&data);
+        parse_input(data, argv);
+        initialize_data(data);
+        // dinner_start(&data);
         // clean(&data);
 	}
 	else
 	{
-		error_exit("Wrong Input");
+		print_error_exit("Wrong Input");
 	}
 }
 

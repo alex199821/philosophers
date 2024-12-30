@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 01:36:18 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 02:08:57 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 16:01:27 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ static long	ft_atol(const char *str)
 void	parse_input(t_data *data, char **argv)
 {
 	data->number_of_philos = ft_atol(argv[1]);
-	data->time_to_die = ft_atol(argv[2]) * 1000;
-	data->time_to_eat = ft_atol(argv[3]) * 1000;
-	data->time_to_sleep = ft_atol(argv[4]) * 1000;
-	if (data->time_to_die / 1000 < 60 || data->time_to_eat / 1000 < 60
-		|| data->time_to_sleep / 1000 < 60)
+	data->time_to_die = ft_atol(argv[2]);
+	data->time_to_eat = ft_atol(argv[3]);
+	data->time_to_sleep = ft_atol(argv[4]);
+	if (data->time_to_die < 60 || data->time_to_eat < 60
+		|| data->time_to_sleep < 60)
 		print_error_exit("Timestamps smaller then 60ms are not usesful");
 	if (argv[5])
 		data->amounto_of_meals = ft_atol(argv[5]);

@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 13:10:48 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:48:59 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void initialize_data(t_data *data)
 	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)
-		return (NULL);
+		return ;
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philos);
 	initialize_mutexes(data);
 	initialize_philos(data);

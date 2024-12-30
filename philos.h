@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 13:11:01 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/30 15:46:54 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ long long			ft_get_time(void);
 void				ft_usleep(useconds_t usec);
 // void	ft_usleep(long long set_miliseconds);
 // main.c
-int					main(void);
+int					main(int argc, char *argv[]);
 void				*philosopher_routine(void *arg);
 
 // utils.c
 void				print_error_exit(char *error_message);
+
+// parsing.c
+void				parse_input(t_data *data, char **argv);
