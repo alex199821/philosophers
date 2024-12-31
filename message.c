@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:11:54 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/22 16:26:12 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/31 06:09:03 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 {
-	long long	current_time;
+	long	current_time;
 
 	pthread_mutex_lock(&data->print);
 	if (ft_is_dead(data))
@@ -23,6 +23,6 @@ void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 		return ;
 	}
 	current_time = ft_get_time() - data->dinner_start_time;
-	printf("%lld %d %s", current_time, philo->id, message);
+	printf("%ld %d %s", current_time, philo->id, message);
 	pthread_mutex_unlock(&data->print);
 }

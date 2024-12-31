@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 21:52:07 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/31 06:07:53 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_philos
 	struct s_data	*data;
 	int				id;
 	int				amount_of_meals_eaten;
-	long long		time_of_last_meal;
+	long			time_of_last_meal;
 	// pthread_mutex_t	*right_fork;
 	// pthread_mutex_t	*left_fork;
 	bool			dead;
@@ -50,13 +50,13 @@ typedef struct s_data
 {
 	int				number_of_philos;
 	int				amounto_of_meals;
-	long long		time_to_die;
-	long long		time_to_eat;
-	long long		time_to_sleep;
-	long long		dinner_start_time;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	long			dinner_start_time;
 	bool			dead_philo;
 	bool			all_threads_ready;
-	pthread_mutex_t		table_mutex;
+	pthread_mutex_t	table_mutex;
 	pthread_t		monitor_thread;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead_mutex;
@@ -76,7 +76,7 @@ void				initialize_data(t_data *data);
 void				ft_custom_message(t_data *data, t_philos *philo,
 						char *message);
 // time.c
-long long			ft_get_time(void);
+long				ft_get_time(void);
 // usleep.c
 void				ft_usleep(useconds_t usec);
 // void	ft_usleep(long long set_miliseconds);

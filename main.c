@@ -6,52 +6,32 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/30 21:56:21 by macbook          ###   ########.fr       */
+/*   Updated: 2024/12/31 06:03:57 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philos.h"
-
-// void take_forks(t_philos *philo, t_data *data)
-// {
-//     if (philo->id % 2 == 0)  // Even philosopher
-//     {
-//         // Even philosophers pick up the left fork first
-//         pthread_mutex_lock(&data->forks[philo->left_fork]);
-//         ft_custom_message(data, philo, "has taken a fork\n");
-//         pthread_mutex_lock(&data->forks[philo->right_fork]);
-//         ft_custom_message(data, philo, "has taken a fork\n");
-//     }
-//     else  // Odd philosopher
-//     {
-//         // Odd philosophers pick up the right fork first
-//         pthread_mutex_lock(&data->forks[philo->right_fork]);
-//         ft_custom_message(data, philo, "has taken a fork\n");
-//         pthread_mutex_lock(&data->forks[philo->left_fork]);
-//         ft_custom_message(data, philo, "has taken a fork\n");
-//     }
-// }
 
 void	take_forks(t_philos *philo, t_data *data)
 {
 	if (philo->left_fork > philo->right_fork)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
-		ft_custom_message(data, philo, "has taken a fork\n");
+		ft_custom_message(data, philo, "has taken a left fork\n");
 		pthread_mutex_lock(&data->forks[philo->right_fork]);
-		ft_custom_message(data, philo, "has taken a fork\n");
+		ft_custom_message(data, philo, "has taken a right fork\n");
 	}
 	else if (philo->left_fork < philo->right_fork)
 	{
 		pthread_mutex_lock(&data->forks[philo->right_fork]);
-		ft_custom_message(data, philo, "has taken a fork\n");
+		ft_custom_message(data, philo, "has taken a right fork\n");
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
-		ft_custom_message(data, philo, "has taken a fork\n");
+		ft_custom_message(data, philo, "has taken a left fork\n");
 	}
 	else
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork]);
-		ft_custom_message(data, philo, "has taken a fork\n");
+		ft_custom_message(data, philo, "has taken a left fork\n");
 		while (!ft_is_dead(data))
 		{
 			ft_usleep(100);
@@ -110,15 +90,14 @@ bool	philo_eat(t_philos *philo, t_data *data)
 		return (false);
 	}
 	pthread_mutex_unlock(&philo->lock);
-	// philo_eat(philo, data);
-	ft_custom_message(data, philo, "is eating\n");
 	pthread_mutex_lock(&philo->lock);
 	philo->time_of_last_meal = ft_get_time();
 	pthread_mutex_unlock(&philo->lock);
+	ft_custom_message(data, philo, "is eating\n");
 	ft_usleep(data->time_to_eat);
-	pthread_mutex_lock(&philo->lock);
+	// pthread_mutex_lock(&philo->lock);
 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
-	pthread_mutex_unlock(&philo->lock);
+	// pthread_mutex_unlock(&philo->lock);
 	drop_forks(philo, data);
 	return (true);
 }
@@ -139,18 +118,20 @@ void	*philosopher_routine(void *arg)
 	t_philos	*philo;
 
 	philo = (t_philos *)arg;
+	philo->time_of_last_meal = ft_get_time();
 	if (philo->id % 2 == 0)
 		ft_usleep(philo->data->time_to_eat / 2);
 	while (!ft_is_dead(philo->data))
 	{
-		if (!philo_eat(philo, philo->data))
-		{
-			// ft_custom_message(philo->data, philo, "died\n");
-			return (NULL);
-		}
+		// if (!philo_eat(philo, philo->data))
+		// {
+		// 	// ft_custom_message(philo->data, philo, "died\n");
+		// 	return (NULL);
+		// }
+		philo_eat(philo, philo->data);
 		philo_sleep(philo, philo->data);
 		philo_thinking(philo, philo->data);
-		usleep(100);
+		// usleep(100);
 	}
 	return (NULL);
 }
