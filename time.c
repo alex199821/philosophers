@@ -6,13 +6,13 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:12:48 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/02 18:35:15 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 02:27:23 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philos.h"
 
-long ft_get_time(void)
+long	ft_get_time(void)
 {
 	struct timeval	time;
 

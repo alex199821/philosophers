@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/02 17:56:32 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 03:08:20 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ void	initialize_mutexes(t_data *data)
 	}
 }
 
-void initialize_data(t_data *data)
+void	initialize_data(t_data *data)
 {
 	data->dead_philo = false;
 	data->all_threads_ready = false;
 	data->dinner_start_time = ft_get_time();
-	pthread_mutex_init(&data->table_mutex, NULL);
+	pthread_mutex_init(&data->count_time_mutex, NULL);
 	pthread_mutex_init(&data->dead_mutex, NULL);
 	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);

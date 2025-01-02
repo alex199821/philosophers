@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/31 06:07:53 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 03:07:40 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef enum e_opcode
 	DETACH
 }					t_opcode;
 
-struct s_data;
+struct	s_data;
 
 typedef struct s_philos
 {
@@ -37,8 +37,6 @@ typedef struct s_philos
 	int				id;
 	int				amount_of_meals_eaten;
 	long			time_of_last_meal;
-	// pthread_mutex_t	*right_fork;
-	// pthread_mutex_t	*left_fork;
 	bool			dead;
 	int				right_fork;
 	int				left_fork;
@@ -56,7 +54,7 @@ typedef struct s_data
 	long			dinner_start_time;
 	bool			dead_philo;
 	bool			all_threads_ready;
-	pthread_mutex_t	table_mutex;
+	pthread_mutex_t	count_time_mutex;
 	pthread_t		monitor_thread;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead_mutex;
@@ -67,14 +65,15 @@ typedef struct s_data
 
 // dead.c
 bool				ft_is_dead(t_data *data);
-void				ft_death_message(t_data *data, t_philos *philo);
+// void				ft_death_message(t_data *data, t_philos *philo);
 // bool				ft_check_death(void *args);
-bool				ft_check_death(t_data *data);
+void				ft_check_death(t_data *data);
 // initialize.c
 void				initialize_data(t_data *data);
 // message.c
 void				ft_custom_message(t_data *data, t_philos *philo,
 						char *message);
+void				ft_death_message(t_data *data, int i);
 // time.c
 long				ft_get_time(void);
 // usleep.c
@@ -89,3 +88,6 @@ void				print_error_exit(char *error_message);
 
 // parsing.c
 void				parse_input(t_data *data, char **argv);
+
+// routine.c
+void				*philosopher_routine(void *arg);

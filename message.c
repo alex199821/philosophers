@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:11:54 by macbook           #+#    #+#             */
-/*   Updated: 2024/12/31 06:09:03 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 02:58:46 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,15 @@ void	ft_custom_message(t_data *data, t_philos *philo, char *message)
 	}
 	current_time = ft_get_time() - data->dinner_start_time;
 	printf("%ld %d %s", current_time, philo->id, message);
+	pthread_mutex_unlock(&data->print);
+}
+
+void	ft_death_message(t_data *data, int i)
+{
+	long	current_time;
+
+	pthread_mutex_lock(&data->print);
+	current_time = ft_get_time() - data->dinner_start_time;
+	printf("%ld %d died\n", current_time, i);
 	pthread_mutex_unlock(&data->print);
 }

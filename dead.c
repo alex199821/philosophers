@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:17:51 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/02 17:55:59 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 03:06:48 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,52 +24,48 @@ bool	ft_is_dead(t_data *data)
 	return (false);
 }
 
-void	ft_death_message(t_data *data, t_philos *philo)
+void	ft_set_dead(t_data *data)
 {
-	long	current_time;
-
-	pthread_mutex_lock(&data->print);
-	current_time = ft_get_time() - data->dinner_start_time;
-	printf("%ld %d died\n", current_time, philo->id);
-	pthread_mutex_unlock(&data->print);
+	pthread_mutex_lock(&data->dead_mutex);
+	data->dead_philo = true;
+	pthread_mutex_unlock(&data->dead_mutex);
 }
 
-// bool	ft_check_death(void *args)
-bool	ft_check_death(t_data *data)
+long	count_time_of_last_meal(t_data *data, int i)
 {
-	int i;
-	long time_since_last_meal;
-	long time_of_last_meal;
-	long current_time;
+	long	time_of_last_meal;
+
+	pthread_mutex_lock(&data->count_time_mutex);
+	time_of_last_meal = data->philos[i].time_of_last_meal;
+	pthread_mutex_unlock(&data->count_time_mutex);
+	return (time_of_last_meal);
+}
+
+void	ft_check_death(t_data *data)
+{
+	int		i;
+	long	time_since_last_meal;
+	long	time_of_last_meal;
 
 	while (true)
 	{
 		i = 0;
 		while (i < data->number_of_philos)
 		{
-			pthread_mutex_lock(&data->table_mutex);
-			time_of_last_meal = data->philos[i].time_of_last_meal;
-			pthread_mutex_unlock(&data->table_mutex);
+			time_of_last_meal = count_time_of_last_meal(data, i);
 			time_since_last_meal = ft_get_time() - time_of_last_meal;
 			if (time_since_last_meal > data->time_to_die)
 			{
 				pthread_mutex_lock(&data->philos[i].lock);
 				if (data->dead_philo == false)
-				{
-					pthread_mutex_lock(&data->dead_mutex);
-					data->dead_philo = true;
-					pthread_mutex_unlock(&data->dead_mutex);
-				}
-				pthread_mutex_lock(&data->print);
-				current_time = ft_get_time() - data->dinner_start_time;
-				printf("%ld %d died\n", current_time, i);
-				pthread_mutex_unlock(&data->print);
+					ft_set_dead(data);
+				ft_death_message(data, i);
 				pthread_mutex_unlock(&data->philos[i].lock);
-				return (false);
+				return ;
 			}
 			pthread_mutex_unlock(&data->philos[i].lock);
 			i++;
 		}
+		usleep(100);
 	}
-	return (true);
 }
