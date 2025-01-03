@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 05:08:47 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:24:46 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	main(int argc, char *argv[])
 		parse_input(data, argv);
 		initialize_data(data);
 		dinner_start(data);
+		ft_clean(data);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:17:51 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 04:39:34 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:28:42 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,16 @@ bool	ft_death_checker(t_data *data, int i)
 
 void	ft_philo_life_monitor(t_data *data)
 {
-	int		i;
+	int	i;
 
 	while (true)
 	{
 		i = 0;
 		while (i < data->number_of_philos)
 		{
-			if(!ft_death_checker(data, i))
+			if (!ft_death_checker(data, i))
 				return ;
 			check_full_philo(data, i);
-			// if(all_philos_full(data))
-			// 	return ;
 			i++;
 		}
 		usleep(100);

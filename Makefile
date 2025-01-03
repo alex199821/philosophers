@@ -6,16 +6,16 @@
 #    By: macbook <macbook@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/22 16:08:14 by macbook           #+#    #+#              #
-#    Updated: 2025/01/03 06:05:28 by macbook          ###   ########.fr        #
+#    Updated: 2025/01/03 07:23:47 by macbook          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
+CFLAGS = -Wall -Werror -Wextra -pthread
 MAKE_LIB = ar -rcs
 
-SRCS = main.c dead.c initialize.c message.c time.c usleep.c utils.c parsing.c routine.c full.c
+SRCS = main.c dead.c initialize.c message.c time.c usleep.c utils.c parsing.c routine.c full.c clean.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

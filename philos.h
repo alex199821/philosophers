@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 04:29:11 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:28:05 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-struct s_data;
+struct	s_data;
 
 typedef struct s_philos
 {
@@ -47,7 +47,7 @@ typedef struct s_data
 	pthread_mutex_t	count_time_mutex;
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead_mutex;
-	pthread_mutex_t full_mutex;
+	pthread_mutex_t	full_mutex;
 	pthread_mutex_t	*forks;
 	t_philos		*philos;
 
@@ -78,3 +78,5 @@ void				*philosopher_routine(void *arg);
 // full.c
 void				check_full_philo(t_data *data, int i);
 bool				all_philos_full(t_data *data);
+// clean.c
+void				ft_clean(t_data *data);

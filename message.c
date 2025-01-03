@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:11:54 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 05:13:15 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:27:06 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_death_message(t_data *data, int i)
 
 	pthread_mutex_lock(&data->print);
 	current_time = ft_get_time() - data->dinner_start_time;
-	if(!all_philos_full(data))
+	if (!all_philos_full(data))
 		printf("%ld %d died\n", current_time, i);
 	pthread_mutex_unlock(&data->print);
 }
