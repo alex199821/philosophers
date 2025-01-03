@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:28:05 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:37:23 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-struct	s_data;
+struct s_data;
 
 typedef struct s_philos
 {
@@ -72,7 +72,7 @@ void				*philosopher_routine(void *arg);
 // utils.c
 void				print_error_exit(char *error_message);
 // parsing.c
-void				parse_input(t_data *data, char **argv);
+bool				parse_input(t_data *data, char **argv);
 // routine.c
 void				*philosopher_routine(void *arg);
 // full.c

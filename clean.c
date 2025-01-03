@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 07:15:00 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:27:48 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:54:06 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,3 +31,4 @@ void	ft_clean(t_data *data)
 	free(data->forks);
 	free(data);
 }
+

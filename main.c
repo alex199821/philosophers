@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:24:46 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:52:59 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	dinner_start(t_data *data)
 				(void *)philosopher_routine, &data->philos[i]) != 0)
 		{
 			print_error_exit("Wrong Input");
+			return ;
 		}
 		i++;
 	}
@@ -44,13 +45,19 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (argc == 5 || argc == 6)
 	{
-		parse_input(data, argv);
+		if (!parse_input(data, argv))
+		{
+			free(data);
+			return (1);
+		}
 		initialize_data(data);
 		dinner_start(data);
 		ft_clean(data);
+		return (0);
 	}
 	else
 	{
 		print_error_exit("Wrong Input");
+		return (1);
 	}
 }
