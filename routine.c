@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 02:28:09 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 05:51:19 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 07:06:55 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,11 @@ bool	philo_eat(t_philos *philo, t_data *data)
 	pthread_mutex_unlock(&philo->data->count_time_mutex);
 	ft_custom_message(data, philo, "is eating\n");
 	ft_usleep(data->time_to_eat);
-	pthread_mutex_lock(&philo->lock);
+	pthread_mutex_lock(&philo->data->philos[philo->id].lock);
+	pthread_mutex_lock(&data->full_mutex);
 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
-	pthread_mutex_unlock(&philo->lock);
+	pthread_mutex_unlock(&data->full_mutex);
+	pthread_mutex_unlock(&philo->data->philos[philo->id].lock);
 	drop_forks(philo, data);
 	return (true);
 }
