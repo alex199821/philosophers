@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 03:08:20 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 05:56:08 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	initialize_philos(t_data *data)
 	while (i < data->number_of_philos)
 	{
 		data->philos[i].id = i;
+		data->philos[i].philo_full = false;
 		data->philos[i].data = data;
 		data->philos[i].amount_of_meals_eaten = 0;
 		data->philos[i].time_of_last_meal = ft_get_time();
@@ -63,10 +64,11 @@ void	initialize_mutexes(t_data *data)
 void	initialize_data(t_data *data)
 {
 	data->dead_philo = false;
-	data->all_threads_ready = false;
+	data->amount_of_full_philos = 0;
 	data->dinner_start_time = ft_get_time();
 	pthread_mutex_init(&data->count_time_mutex, NULL);
 	pthread_mutex_init(&data->dead_mutex, NULL);
+	pthread_mutex_init(&data->full_mutex, NULL);
 	pthread_mutex_init(&data->print, NULL);
 	data->philos = malloc(sizeof(t_philos) * data->number_of_philos);
 	if (!data->philos)

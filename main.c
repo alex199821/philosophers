@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 07:59:30 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 02:28:48 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/03 05:08:47 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	dinner_start(t_data *data)
 		i++;
 	}
 	i = 0;
-	ft_check_death(data);
+	ft_philo_life_monitor(data);
 	while (i < data->number_of_philos)
 	{
 		pthread_join(data->philos[i].philo_thread, NULL);
