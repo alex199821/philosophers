@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 01:36:18 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 08:01:05 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/19 22:41:20 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ const char	*valid_input(const char *str)
 	if (*str == '+')
 		++str;
 	else if (*str == '-')
-		return (print_error_exit("Only Positive Timestamps allowed"), NULL);
+		return (print_error_exit("Only Positive Inputs allowed"), NULL);
 	if (!is_digit(*str))
 		return (print_error_exit("The input is not a correct digit"), NULL);
 	number = str;
@@ -74,6 +74,8 @@ bool	parse_input(t_data *data, char **argv)
 		return (print_error_exit("Timestamps smaller than 60ms not allowed"),
 			false);
 	if(data->number_of_philos < 1)
+		return (false);
+	if(ft_atol(argv[5]) < 0)
 		return (false);
 	if (argv[5])
 		data->amounto_of_meals = ft_atol(argv[5]);
