@@ -6,7 +6,7 @@
 /*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 01:36:18 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/19 22:41:20 by auplisas         ###   ########.fr       */
+/*   Updated: 2025/01/19 22:58:38 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool	parse_input(t_data *data, char **argv)
 			false);
 	if(data->number_of_philos < 1)
 		return (false);
-	if(ft_atol(argv[5]) < 0)
+	if(argv[5] && ft_atol(argv[5]) < 0)
 		return (false);
 	if (argv[5])
 		data->amounto_of_meals = ft_atol(argv[5]);

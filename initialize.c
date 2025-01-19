@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:18:29 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 05:56:08 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/19 23:01:09 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	initialize_philos(t_data *data)
 	i = 0;
 	while (i < data->number_of_philos)
 	{
-		data->philos[i].id = i;
+		data->philos[i].id = i + 1;
 		data->philos[i].philo_full = false;
 		data->philos[i].data = data;
 		data->philos[i].amount_of_meals_eaten = 0;

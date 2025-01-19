@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   message.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
+/*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:11:54 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:27:06 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/19 23:01:52 by auplisas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ void	ft_death_message(t_data *data, int i)
 	pthread_mutex_lock(&data->print);
 	current_time = ft_get_time() - data->dinner_start_time;
 	if (!all_philos_full(data))
-		printf("%ld %d died\n", current_time, i);
+		printf("%ld %d died\n", current_time, i + 1);
 	pthread_mutex_unlock(&data->print);
 }
