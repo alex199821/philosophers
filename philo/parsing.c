@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 01:36:18 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/19 22:58:38 by auplisas         ###   ########.fr       */
+/*   Updated: 2025/01/20 12:54:01 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 bool	is_digit(char c)
 {
-	if(c >= '0' && c <= '9')
+	if (c >= '0' && c <= '9')
 		return (true);
 	return (false);
 }
 
 bool	is_space(char c)
 {
-	if((c >= 9 && c <= 13) || c == 32)
+	if ((c >= 9 && c <= 13) || c == 32)
 		return (true);
 	return (false);
 }
@@ -37,7 +37,7 @@ const char	*valid_input(const char *str)
 	if (*str == '+')
 		++str;
 	else if (*str == '-')
-		return (print_error_exit("Only Positive Inputs allowed"), NULL);
+		return (NULL);
 	if (!is_digit(*str))
 		return (print_error_exit("The input is not a correct digit"), NULL);
 	number = str;
@@ -54,7 +54,7 @@ static long	ft_atol(const char *str)
 
 	num = 0;
 	str = valid_input(str);
-	if(!str)
+	if (!str)
 		return (-1);
 	while (is_digit(*str))
 		num = (num * 10 + (*str++ - 48));
@@ -73,10 +73,10 @@ bool	parse_input(t_data *data, char **argv)
 		|| data->time_to_sleep < 60)
 		return (print_error_exit("Timestamps smaller than 60ms not allowed"),
 			false);
-	if(data->number_of_philos < 1)
+	if (data->number_of_philos < 1)
 		return (false);
-	if(argv[5] && ft_atol(argv[5]) < 0)
-		return (false);
+	if (argv[5] && ft_atol(argv[5]) < 0)
+		return (print_error_exit("Only Positive Inputs allowed"), false);
 	if (argv[5])
 		data->amounto_of_meals = ft_atol(argv[5]);
 	else

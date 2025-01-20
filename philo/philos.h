@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:37:23 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/20 12:53:45 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-struct s_data;
+struct	s_data;
 
 typedef struct s_philos
 {

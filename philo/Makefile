@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: auplisas <auplisas@student.42.fr>          +#+  +:+       +#+         #
+#    By: macbook <macbook@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/22 16:08:14 by macbook           #+#    #+#              #
-#    Updated: 2025/01/19 22:58:09 by auplisas         ###   ########.fr        #
+#    Updated: 2025/01/20 01:52:04 by macbook          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,11 +28,9 @@ $(NAME): $(OBJS)
 
 clean:
 	rm -f $(OBJS)
-	$(MAKE) -C clean
 
 fclean: clean
 	rm -f $(NAME)
-	$(MAKE) -C fclean
 
 re: fclean all
 
