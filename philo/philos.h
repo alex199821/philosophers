@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/20 12:53:45 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/20 14:11:17 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int					main(int argc, char *argv[]);
 void				*philosopher_routine(void *arg);
 // utils.c
 void				print_error_exit(char *error_message);
+size_t				ft_strlen(const char *c);
 // parsing.c
 bool				parse_input(t_data *data, char **argv);
 // routine.c

@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 01:36:18 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/20 12:54:01 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/20 14:10:47 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,29 @@ bool	is_space(char c)
 
 const char	*valid_input(const char *str)
 {
-	int			len;
-	const char	*number;
+	int	i;
+	int	len;
 
+	i = 0;
 	len = 0;
-	while (is_space(*str))
-		++str;
-	if (*str == '+')
-		++str;
-	else if (*str == '-')
-		return (NULL);
-	if (!is_digit(*str))
-		return (print_error_exit("The input is not a correct digit"), NULL);
-	number = str;
-	while (is_digit(*str++))
-		++len;
+	if (ft_strlen(str) < 1)
+		return (print_error_exit("The value can't be empty"), NULL);
+	while (is_space(str[i]))
+		i++;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+		return (print_error_exit("The value can't be negative number"), NULL);
+	while (str[i])
+	{
+		if (!is_digit(str[i]))
+			return (print_error_exit("The input is not a digit"), NULL);
+		i++;
+		len++;
+	}
 	if (len > 10)
 		return (print_error_exit("The value is bigger then INT_MAX"), NULL);
-	return (number);
+	return (str);
 }
 
 static long	ft_atol(const char *str)
@@ -58,6 +63,8 @@ static long	ft_atol(const char *str)
 		return (-1);
 	while (is_digit(*str))
 		num = (num * 10 + (*str++ - 48));
+	if (num < 1)
+		return (print_error_exit("The value can't be smaller than 1"), -1);
 	if (num > INT_MAX)
 		return (print_error_exit("The value is bigger then INT_MAX"), -1);
 	return (num);
@@ -69,14 +76,18 @@ bool	parse_input(t_data *data, char **argv)
 	data->time_to_die = ft_atol(argv[2]);
 	data->time_to_eat = ft_atol(argv[3]);
 	data->time_to_sleep = ft_atol(argv[4]);
-	if (data->time_to_die < 60 || data->time_to_eat < 60
-		|| data->time_to_sleep < 60)
+	if ((data->time_to_die < 60 && data->time_to_die > 0)
+		|| (data->time_to_eat < 60 && data->time_to_eat > 0)
+		|| (data->time_to_sleep < 60 && data->time_to_sleep > 0))
 		return (print_error_exit("Timestamps smaller than 60ms not allowed"),
 			false);
+	if (data->time_to_die < 60 || data->time_to_eat < 60
+		|| data->time_to_sleep < 60)
+		return (false);
 	if (data->number_of_philos < 1)
 		return (false);
 	if (argv[5] && ft_atol(argv[5]) < 0)
-		return (print_error_exit("Only Positive Inputs allowed"), false);
+		return (false);
 	if (argv[5])
 		data->amounto_of_meals = ft_atol(argv[5]);
 	else
