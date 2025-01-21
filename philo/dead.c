@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/22 16:17:51 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:28:42 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/21 02:36:17 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ bool	ft_death_checker(t_data *data, int i)
 
 	time_of_last_meal = count_time_of_last_meal(data, i);
 	time_since_last_meal = ft_get_time() - time_of_last_meal;
+	pthread_mutex_lock(&data->philos[i].lock);
 	if (time_since_last_meal > data->time_to_die)
 	{
-		pthread_mutex_lock(&data->philos[i].lock);
 		if (data->dead_philo == false)
 			ft_set_dead(data);
 		ft_death_message(data, i);
@@ -61,7 +61,7 @@ bool	ft_death_checker(t_data *data, int i)
 	return (true);
 }
 
-void	ft_philo_life_monitor(t_data *data)
+int	ft_philo_life_monitor(t_data *data)
 {
 	int	i;
 
@@ -71,10 +71,13 @@ void	ft_philo_life_monitor(t_data *data)
 		while (i < data->number_of_philos)
 		{
 			if (!ft_death_checker(data, i))
-				return ;
+				return (1);
 			check_full_philo(data, i);
+			if (data->amount_of_full_philos >= data->number_of_philos)
+				return (1);
 			i++;
 		}
 		usleep(100);
 	}
+	return (0);
 }

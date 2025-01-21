@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 02:28:09 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/03 07:06:55 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/21 03:41:37 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ void	*philosopher_routine(void *arg)
 		ft_usleep(philo->data->time_to_eat / 2);
 	while (!ft_is_dead(philo->data) && !all_philos_full(philo->data))
 	{
+		ft_custom_message(philo->data, philo, "is thinking\n");
 		philo_eat(philo, philo->data);
 		philo_sleep(philo, philo->data);
-		ft_custom_message(philo->data, philo, "is thinking\n");
 		usleep(100);
 	}
 	return (NULL);

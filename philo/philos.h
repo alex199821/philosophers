@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/20 14:11:17 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/21 03:10:33 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-struct	s_data;
+struct s_data;
 
 typedef struct s_philos
 {
@@ -55,7 +55,7 @@ typedef struct s_data
 
 // dead.c
 bool				ft_is_dead(t_data *data);
-void				ft_philo_life_monitor(t_data *data);
+int					ft_philo_life_monitor(t_data *data);
 // initialize.c
 void				initialize_data(t_data *data);
 // message.c
