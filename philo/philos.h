@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 08:31:53 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/21 03:10:33 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/22 01:29:40 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-struct s_data;
+struct	s_data;
 
 typedef struct s_philos
 {
@@ -66,6 +66,7 @@ void				ft_death_message(t_data *data, int i);
 long				ft_get_time(void);
 // usleep.c
 void				ft_usleep(useconds_t usec);
+bool				ft_sleep_usleep(t_philos *philos, useconds_t usec);
 // main.c
 int					main(int argc, char *argv[]);
 void				*philosopher_routine(void *arg);

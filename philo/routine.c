@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 02:28:09 by macbook           #+#    #+#             */
-/*   Updated: 2025/01/21 22:32:05 by macbook          ###   ########.fr       */
+/*   Updated: 2025/01/22 01:29:16 by macbook          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool	philo_eat(t_philos *philo, t_data *data)
 	philo->time_of_last_meal = ft_get_time();
 	pthread_mutex_unlock(&philo->data->count_time_mutex);
 	ft_custom_message(data, philo, "is eating\n");
-	ft_usleep(data->time_to_eat);
+	ft_sleep_usleep(philo, data->time_to_eat);
 	pthread_mutex_lock(&philo->data->philos[philo->id].lock);
 	pthread_mutex_lock(&data->full_mutex);
 	philo->amount_of_meals_eaten = philo->amount_of_meals_eaten + 1;
@@ -85,7 +85,7 @@ bool	philo_eat(t_philos *philo, t_data *data)
 void	philo_sleep(t_philos *philo, t_data *data)
 {
 	ft_custom_message(data, philo, "is sleeping\n");
-	ft_usleep(data->time_to_sleep);
+	ft_sleep_usleep(philo, data->time_to_sleep);
 }
 
 void	*philosopher_routine(void *arg)
@@ -95,10 +95,10 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philos *)arg;
 	ft_custom_message(philo->data, philo, "is thinking\n");
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->time_to_eat / 2);
+		ft_sleep_usleep(philo, philo->data->time_to_eat / 2);
 	while (!ft_is_dead(philo->data) && !all_philos_full(philo->data))
 	{
-		if (all_philos_full(philo->data)) 
+		if (all_philos_full(philo->data))
 			return (NULL);
 		philo_eat(philo, philo->data);
 		if (all_philos_full(philo->data))
